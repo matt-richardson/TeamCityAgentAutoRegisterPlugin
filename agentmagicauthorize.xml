@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="agentmagicauthorize" default="all">
+  
+  
+  <property file="agentmagicauthorize.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.sbas/**"/>
+    <exclude name="**/.IJI.*/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.orig/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.ear"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.swc"/>
+    <include name="*.ane"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.ftl"/>
+    <include name="**/?*.htm"/>
+    <include name="**/?*.jsp"/>
+    <include name="**/?*.js"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.teamcity_closed_api_server.classpath">
+    <pathelement location="${path.variable.teamcitydistribution}/webapps/ROOT/WEB-INF/lib/server.jar"/>
+  </path>
+  
+  <path id="library.teamcity_open_api_common.classpath">
+    <pathelement location="${path.variable.teamcitydistribution}/devPackage/common-api.jar"/>
+    <pathelement location="${path.variable.teamcitydistribution}/devPackage/runtime/runtime-util.jar"/>
+  </path>
+  
+  <path id="library.teamcity_open_api_server.classpath">
+    <pathelement location="${path.variable.teamcitydistribution}/devPackage/server-api.jar"/>
+  </path>
+  
+  <path id="library.teamcity_third-party_common.classpath">
+    <pathelement location="${path.variable.teamcitydistribution}/webapps/ROOT/WEB-INF/lib/annotations.jar"/>
+    <pathelement location="${path.variable.teamcitydistribution}/webapps/ROOT/WEB-INF/lib/openapi.jar"/>
+    <pathelement location="${path.variable.teamcitydistribution}/webapps/ROOT/WEB-INF/lib/spring.jar"/>
+    <pathelement location="${path.variable.teamcitydistribution}/webapps/ROOT/WEB-INF/lib/util.jar"/>
+  </path>
+  
+  <path id="library.teamcity_third-party_server.classpath">
+    <pathelement location="${path.variable.teamcitydistribution}/webapps/ROOT/WEB-INF/lib/spring-webmvc.jar"/>
+  </path>
+  
+  <path id="library.tomcat.classpath">
+    <pathelement location="${path.variable.teamcitydistribution}/lib/servlet-api.jar"/>
+  </path>
+  
+  
+  <!-- Application Server Libraries -->
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm4-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module agentMagicAuthorize-server -->
+  
+  <dirname property="module.agentmagicauthorize-server.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.agentmagicauthorize-server" value="-encoding windows-1251 -source 1.5 ${compiler.args}"/>
+  
+  <property name="agentmagicauthorize-server.output.dir" value="${module.agentmagicauthorize-server.basedir}/out/production/agentMagicAuthorize-server"/>
+  <property name="agentmagicauthorize-server.testoutput.dir" value="${module.agentmagicauthorize-server.basedir}/out/test/agentMagicAuthorize-server"/>
+  
+  <path id="agentmagicauthorize-server.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="agentmagicauthorize-server.module.production.classpath">
+    <path refid="library.tomcat.classpath"/>
+    <path refid="library.teamcity_open_api_server.classpath"/>
+    <path refid="library.teamcity_open_api_common.classpath"/>
+    <path refid="library.teamcity_third-party_common.classpath"/>
+    <path refid="library.teamcity_third-party_server.classpath"/>
+    <path refid="library.teamcity_closed_api_server.classpath"/>
+  </path>
+  
+  <path id="agentmagicauthorize-server.runtime.production.module.classpath">
+    <pathelement location="${agentmagicauthorize-server.output.dir}"/>
+    <path refid="library.tomcat.classpath"/>
+    <path refid="library.teamcity_open_api_server.classpath"/>
+    <path refid="library.teamcity_open_api_common.classpath"/>
+    <path refid="library.teamcity_third-party_common.classpath"/>
+    <path refid="library.teamcity_third-party_server.classpath"/>
+    <path refid="library.teamcity_closed_api_server.classpath"/>
+  </path>
+  
+  <path id="agentmagicauthorize-server.module.classpath">
+    <pathelement location="${agentmagicauthorize-server.output.dir}"/>
+    <path refid="library.tomcat.classpath"/>
+    <path refid="library.teamcity_open_api_server.classpath"/>
+    <path refid="library.teamcity_open_api_common.classpath"/>
+    <path refid="library.teamcity_third-party_common.classpath"/>
+    <path refid="library.teamcity_third-party_server.classpath"/>
+    <path refid="library.teamcity_closed_api_server.classpath"/>
+  </path>
+  
+  <path id="agentmagicauthorize-server.runtime.module.classpath">
+    <pathelement location="${agentmagicauthorize-server.testoutput.dir}"/>
+    <pathelement location="${agentmagicauthorize-server.output.dir}"/>
+    <path refid="library.tomcat.classpath"/>
+    <path refid="library.teamcity_open_api_server.classpath"/>
+    <path refid="library.teamcity_open_api_common.classpath"/>
+    <path refid="library.teamcity_third-party_common.classpath"/>
+    <path refid="library.teamcity_third-party_server.classpath"/>
+    <path refid="library.teamcity_closed_api_server.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.agentmagicauthorize-server">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.agentmagicauthorize-server">
+    <patternset refid="excluded.from.module.agentmagicauthorize-server"/>
+  </patternset>
+  
+  <path id="agentmagicauthorize-server.module.sourcepath">
+    <dirset dir="${module.agentmagicauthorize-server.basedir}/server">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.agentmagicauthorize-server" depends="compile.module.agentmagicauthorize-server.production,compile.module.agentmagicauthorize-server.tests" description="Compile module agentMagicAuthorize-server"/>
+  
+  <target name="compile.module.agentmagicauthorize-server.production" depends="register.custom.compilers" description="Compile module agentMagicAuthorize-server; production classes">
+    <mkdir dir="${agentmagicauthorize-server.output.dir}"/>
+    <javac2 destdir="${agentmagicauthorize-server.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.agentmagicauthorize-server}"/>
+      <bootclasspath refid="agentmagicauthorize-server.module.bootclasspath"/>
+      <classpath refid="agentmagicauthorize-server.module.production.classpath"/>
+      <src refid="agentmagicauthorize-server.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.agentmagicauthorize-server"/>
+    </javac2>
+    
+    <copy todir="${agentmagicauthorize-server.output.dir}">
+      <fileset dir="${module.agentmagicauthorize-server.basedir}/server/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.agentmagicauthorize-server.tests" depends="register.custom.compilers,compile.module.agentmagicauthorize-server.production" description="compile module agentMagicAuthorize-server; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.agentmagicauthorize-server" description="cleanup module">
+    <delete dir="${agentmagicauthorize-server.output.dir}"/>
+    <delete dir="${agentmagicauthorize-server.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module root -->
+  
+  <dirname property="module.root.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.root" value="-encoding windows-1251 -source 1.5 ${compiler.args}"/>
+  
+  <property name="root.output.dir" value="${module.root.basedir}/out/production/root"/>
+  <property name="root.testoutput.dir" value="${module.root.basedir}/out/test/root"/>
+  
+  <path id="root.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="root.module.production.classpath"/>
+  
+  <path id="root.runtime.production.module.classpath">
+    <pathelement location="${root.output.dir}"/>
+  </path>
+  
+  <path id="root.module.classpath">
+    <pathelement location="${root.output.dir}"/>
+  </path>
+  
+  <path id="root.runtime.module.classpath">
+    <pathelement location="${root.testoutput.dir}"/>
+    <pathelement location="${root.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.root">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.root">
+    <patternset refid="excluded.from.module.root"/>
+  </patternset>
+  
+  
+  <target name="compile.module.root" depends="compile.module.root.production,compile.module.root.tests" description="Compile module root"/>
+  
+  <target name="compile.module.root.production" depends="register.custom.compilers" description="Compile module root; production classes"/>
+  
+  <target name="compile.module.root.tests" depends="register.custom.compilers,compile.module.root.production" description="compile module root; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.root" description="cleanup module">
+    <delete dir="${root.output.dir}"/>
+    <delete dir="${root.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.agentmagicauthorize-server, clean.module.root, clean.artifact.unpacked_plugin" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.agentmagicauthorize-server, compile.module.root" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.agentmagicauthorize-common.jar" value="${basedir}/out/artifacts/agentMagicAuthorize_common_jar"/>
+    <property name="artifact.output.copy_plugin_to_data_directory" value="${path.variable.teamcitydatadirectory}/plugins"/>
+    <property name="artifact.output.final_plugin_package" value="${basedir}/out/artifacts/final_plugin_package"/>
+    <property name="artifact.output.unpacked_plugin" value="${basedir}/out/artifacts/unpacked_plugin"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.agentMagicAuthorize-common.jar" value="${artifacts.temp.dir}/agentMagicAuthorize-common.jar"/>
+    <property name="temp.jar.path.agentMagicAuthorize.zip" value="${artifacts.temp.dir}/agentMagicAuthorize.zip"/>
+    <property name="temp.jar.path.agentMagicAuthorize.zip2" value="${artifacts.temp.dir}/1/agentMagicAuthorize.zip"/>
+    <mkdir dir="${artifacts.temp.dir}/1"/>
+    <property name="temp.jar.path.agentMagicAuthorize.zip3" value="${artifacts.temp.dir}/2/agentMagicAuthorize.zip"/>
+    <mkdir dir="${artifacts.temp.dir}/2"/>
+    <property name="temp.jar.path.agentMagicAuthorize-agent.jar" value="${artifacts.temp.dir}/agentMagicAuthorize-agent.jar"/>
+    <property name="temp.jar.path.agentMagicAuthorize-server.jar" value="${artifacts.temp.dir}/agentMagicAuthorize-server.jar"/>
+  </target>
+  
+  <target name="clean.artifact.unpacked_plugin" description="clean unpacked plugin artifact output">
+    <delete dir="${artifact.output.unpacked_plugin}"/>
+  </target>
+  
+  <target name="artifact.agentmagicauthorize-common.jar" depends="init.artifacts" description="Build &#39;agentMagicAuthorize-common.jar&#39; artifact">
+    <property name="artifact.temp.output.agentmagicauthorize-common.jar" value="${artifacts.temp.dir}/agentMagicAuthorize_common_jar"/>
+    <mkdir dir="${artifact.temp.output.agentmagicauthorize-common.jar}"/>
+    <jar destfile="${temp.jar.path.agentMagicAuthorize-common.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${agentmagicauthorize-common.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.agentMagicAuthorize-common.jar}" tofile="${artifact.temp.output.agentmagicauthorize-common.jar}/agentMagicAuthorize-common.jar"/>
+  </target>
+  
+  <target name="artifact.copy_plugin_to_data_directory" depends="init.artifacts, artifact.unpacked_plugin" description="Build &#39;copy plugin to data directory&#39; artifact">
+    <property name="artifact.temp.output.copy_plugin_to_data_directory" value="${artifacts.temp.dir}/copy_plugin_to_data_directory"/>
+    <mkdir dir="${artifact.temp.output.copy_plugin_to_data_directory}"/>
+    <zip destfile="${temp.jar.path.agentMagicAuthorize.zip}">
+      <zipfileset dir="${artifact.output.unpacked_plugin}"/>
+    </zip>
+    <copy file="${temp.jar.path.agentMagicAuthorize.zip}" tofile="${artifact.temp.output.copy_plugin_to_data_directory}/agentMagicAuthorize.zip"/>
+  </target>
+  
+  <target name="artifact.final_plugin_package" depends="init.artifacts, artifact.unpacked_plugin" description="Build &#39;final plugin package&#39; artifact">
+    <property name="artifact.temp.output.final_plugin_package" value="${artifacts.temp.dir}/final_plugin_package"/>
+    <mkdir dir="${artifact.temp.output.final_plugin_package}"/>
+    <zip destfile="${temp.jar.path.agentMagicAuthorize.zip2}">
+      <zipfileset dir="${artifact.output.unpacked_plugin}"/>
+    </zip>
+    <copy file="${temp.jar.path.agentMagicAuthorize.zip2}" tofile="${artifact.temp.output.final_plugin_package}/agentMagicAuthorize.zip"/>
+  </target>
+  
+  <target name="artifact.unpacked_plugin" depends="init.artifacts, artifact.agentmagicauthorize-common.jar, artifact.agentmagicauthorize-common.jar, compile.module.agentmagicauthorize-server" description="Build &#39;unpacked plugin&#39; artifact">
+    <mkdir dir="${artifact.output.unpacked_plugin}"/>
+    <jar destfile="${temp.jar.path.agentMagicAuthorize-agent.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${agentmagicauthorize-agent.output.dir}"/>
+    </jar>
+    <zip destfile="${temp.jar.path.agentMagicAuthorize.zip3}">
+      <zipfileset dir="${artifact.temp.output.agentmagicauthorize-common.jar}" prefix="agentMagicAuthorize/lib"/>
+      <zipfileset file="${temp.jar.path.agentMagicAuthorize-agent.jar}" prefix="agentMagicAuthorize/lib"/>
+    </zip>
+    <jar destfile="${temp.jar.path.agentMagicAuthorize-server.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${agentmagicauthorize-server.output.dir}"/>
+    </jar>
+    <mkdir dir="${artifact.output.unpacked_plugin}/agent"/>
+    <copy file="${temp.jar.path.agentMagicAuthorize.zip3}" tofile="${artifact.output.unpacked_plugin}/agent/agentMagicAuthorize.zip"/>
+    <mkdir dir="${artifact.output.unpacked_plugin}/server"/>
+    <copy todir="${artifact.output.unpacked_plugin}/server">
+      <fileset dir="${artifact.temp.output.agentmagicauthorize-common.jar}"/>
+    </copy>
+    <copy file="${temp.jar.path.agentMagicAuthorize-server.jar}" tofile="${artifact.output.unpacked_plugin}/server/agentMagicAuthorize-server.jar"/>
+    <ant antfile="build.xml" target="prepare.plugin.descriptor.file.artifacts" dir="${basedir}">
+      <property name="artifact.output.path" value="${artifact.output.unpacked_plugin}"/>
+      <property name="source" value="teamcity-plugin.xml"/>
+      <property name="dest" value="${artifact.output.path}/teamcity-plugin.xml"/>
+      <property name="plugin.vendor" value=""/>
+      <property name="plugin.vendor.url" value=""/>
+    </ant>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.agentmagicauthorize-common.jar, artifact.copy_plugin_to_data_directory, artifact.final_plugin_package, artifact.unpacked_plugin" description="Build all artifacts">
+    <mkdir dir="${artifact.output.agentmagicauthorize-common.jar}"/>
+    <copy todir="${artifact.output.agentmagicauthorize-common.jar}">
+      <fileset dir="${artifact.temp.output.agentmagicauthorize-common.jar}"/>
+    </copy>
+    <mkdir dir="${artifact.output.copy_plugin_to_data_directory}"/>
+    <copy todir="${artifact.output.copy_plugin_to_data_directory}">
+      <fileset dir="${artifact.temp.output.copy_plugin_to_data_directory}"/>
+    </copy>
+    <mkdir dir="${artifact.output.final_plugin_package}"/>
+    <copy todir="${artifact.output.final_plugin_package}">
+      <fileset dir="${artifact.temp.output.final_plugin_package}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
