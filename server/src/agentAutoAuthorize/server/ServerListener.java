@@ -1,4 +1,4 @@
-package agentMagicAuthorize.server;
+package agentAutoAuthorize.server;
 
 import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.log.Loggers;
@@ -12,14 +12,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Example server events listener
- */
+
 public class ServerListener extends BuildServerAdapter {
   final static Logger LOG = Logger.getInstance(ServerListener.class.getName());
 
-  protected static final String TOKEN_AGENT_AUTHORIZE = "tokenAgentAuthorize";
-  protected static final String AUTHORIZATION_TOKEN_NAME = "teamcity.magic.authorizationToken";
+  protected static final String PLUGIN_NAME = "tokenAgentAuthorize";
+  protected static final String AUTHORIZATION_TOKEN_NAME = "teamcity.agentAutoAuthorize.authorizationToken";
   @NotNull
   private final BuildAgentManager myAgentManager;
   @NotNull
@@ -43,7 +41,7 @@ public class ServerListener extends BuildServerAdapter {
 
   @Override
   public void serverStartup() {
-    Loggers.SERVER.info("Plugin '" + TOKEN_AGENT_AUTHORIZE + "'. Is running on server version " + myServer.getFullServerVersion() + ".");
+    Loggers.SERVER.info("Plugin '" + PLUGIN_NAME + "'. Is running on server version " + myServer.getFullServerVersion() + ".");
   }
 
   @Override
@@ -63,13 +61,6 @@ public class ServerListener extends BuildServerAdapter {
       LOG.debug("Found no defined token data for token \"" + authToken + "\" for agent " + agent.describe(false));
       return;
     }
-    final int agentsAuthorizedWithTheToken = getAgentsAuthorizedWithTheToken(data);
-    if (agentsAuthorizedWithTheToken >= data.getTotalLimit()) {
-      LOG.debug("Cannot authorize agent agent " + agent.describe(false) +
-              " as the number of authorized agents with the token \"" + data.getToken() + "\" is " +
-              agentsAuthorizedWithTheToken + " which is not below set limit (" + data.getTotalLimit() + ")");
-      return;
-    }
     final String agentPoolId = data.getAgentPoolId();
     if (agentPoolId != null){
       final Integer parsedPoolId = Integer.valueOf(agentPoolId); //todo handle exceptions
@@ -82,7 +73,6 @@ public class ServerListener extends BuildServerAdapter {
         }
       }
     }
-    myTokenStore.markUsed(data);
     agent.setAuthorized(true, null, "Authorized by agent token authorize plugin, token \"" + data.getName() + "\"");
     setAgentPrameter(agent, AUTHORIZATION_TOKEN_NAME, getSubstitutionValue(data));
 
@@ -103,22 +93,5 @@ public class ServerListener extends BuildServerAdapter {
 
   private String getTokenForAgent(SBuildAgent agent) {
     return agent.getConfigurationParameters().get(AUTHORIZATION_TOKEN_NAME);
-  }
-
-  private int getAgentsAuthorizedWithTheToken(TokenStore.TokenData data) {
-    int result = 0;
-    for (SBuildAgent agent : myAgentManager.getRegisteredAgents()) {
-      final String tokenForAgent = getTokenForAgent(agent);
-      if (tokenForAgent != null && tokenForAgent.equals(getSubstitutionValue(data)) && agent.isAuthorized()){
-        result++;
-      }
-    }
-    for (SBuildAgent agent : myAgentManager.getUnregisteredAgents()) {
-      final String tokenForAgent = getTokenForAgent(agent);
-      if (tokenForAgent != null && tokenForAgent.equals(getSubstitutionValue(data)) && agent.isAuthorized()){
-        result++;
-      }
-    }
-    return result;
   }
 }

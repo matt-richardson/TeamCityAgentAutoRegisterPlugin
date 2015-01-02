@@ -1,15 +1,15 @@
-<project name="agentMagicAuthorize-custom-build" default="dist" basedir=".">
+<project name="agentAutoAuthorize-custom-build" default="dist" basedir=".">
 
   <property file="build.properties"/>
-  <property name="plugin.name" value="agentMagicAuthorize"/>
+  <property name="plugin.name" value="agentAutoAuthorize"/>
   <property name="javac2.home" value="${basedir}/lib-compile"/>
 
   <import file="teamcity-common.xml"/>
-  <import file="agentmagicauthorize.xml"/>
+  <import file="agentautoauthorize.xml"/>
 
   <target name="package" depends="define.version">
     <package.teamcity.plugin name="${plugin.name}"
-                             server.output="${agentmagicauthorize-server.output.dir}"
+                             server.output="${agentautoauthorize-server.output.dir}"
                              server.lib.dir="lib" server.lib.includes="*.jar"
                              plugin.descriptor.file="${basedir}/teamcity-plugin.xml"
                              plugin.version="${plugin.version}"/>
@@ -28,7 +28,7 @@
 
   <target name="dist" depends="check.teamcitydistribution,build.modules,package"/>
 
-  <target name="clean" depends="agentmagicauthorize.clean"/>
+  <target name="clean" depends="agentautoauthorize.clean"/>
 
   <target name="deploy" depends="dist">
     <deploy.teamcity.plugin name="${plugin.name}"/>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package agentMagicAuthorize.server;
+package agentAutoAuthorize.server;
 
 import com.intellij.openapi.util.text.StringUtil;
 import jetbrains.buildServer.serverSide.TeamCityProperties;
@@ -61,10 +61,6 @@ public class TokenStore {
       if (!it.hasNext()) {
         throw new RuntimeException("Bad token specification"); //todo
       }
-      final String totalLimit = it.next().trim();
-      if (!it.hasNext()) {
-        throw new RuntimeException("Bad token specification"); //todo
-      }
       final String agentPoolId = it.next().trim();
 
       final TokenData data = new TokenData(name, token, totalLimit, agentPoolId);
@@ -73,24 +69,15 @@ public class TokenStore {
     return result;
   }
 
-  synchronized public void markUsed(TokenData data) {
-    myUsedTokens.add(data.getToken());  //todo: persist!!!
-  }
-
-  synchronized public boolean isUsed(TokenData data) { //todo merge this with number check
-    return myUsedTokens.contains(data.getToken());
-  }
 
   public class TokenData {
     private final String myName;
     private final String myToken;
-    private final String myTotalLimit;
     private final String myAgentPoolId;
 
-    public TokenData(String name, String token, String totalLimit, String agentPoolId) {
+    public TokenData(String name, String token, String agentPoolId) {
       myName = name;
       myToken = token;
-      myTotalLimit = totalLimit;
       myAgentPoolId = agentPoolId;
     }
 
@@ -100,10 +87,6 @@ public class TokenStore {
 
     public String getToken() {
       return myToken;
-    }
-
-    public Integer getTotalLimit() {
-      return Integer.valueOf(myTotalLimit);
     }
 
     public String getAgentPoolId() {
