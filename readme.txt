@@ -1,5 +1,6 @@
 A plugin for TeamCity to allow automatic agent authorization based on a token configured in agent's buildAgent.properties file.
 Related feature request: http://youtrack.jetbrains.com/issue/TW-33377
+Heavily based on the original JetBrains plugin (https://confluence.jetbrains.com/display/TW/Agent+Custom+Token+Authorize+Plugin)
 
 
 -- How to use and build the project --

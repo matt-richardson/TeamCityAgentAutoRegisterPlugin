@@ -37,7 +37,7 @@ public class TokenStore {
     final String trimmedToken = token.trim();
     return CollectionsUtil.findFirst(getAllTokenData(), new Filter<TokenData>() {
       public boolean accept(@NotNull TokenData data) {
-        return data.getToken().equals(trimmedToken) && !isUsed(data);
+        return data.getToken().equals(trimmedToken);
       }
     });
   }
@@ -63,7 +63,7 @@ public class TokenStore {
       }
       final String agentPoolId = it.next().trim();
 
-      final TokenData data = new TokenData(name, token, totalLimit, agentPoolId);
+      final TokenData data = new TokenData(name, token, agentPoolId);
       result.add(data);
     }
     return result;
