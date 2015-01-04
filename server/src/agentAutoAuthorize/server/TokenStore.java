@@ -16,81 +16,19 @@
 
 package agentAutoAuthorize.server;
 
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.serverSide.TeamCityProperties;
-import jetbrains.buildServer.util.CollectionsUtil;
-import jetbrains.buildServer.util.filters.Filter;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-/**
- * @author Yegor.Yarko
- *         Date: 10.04.2014
- */
 public class TokenStore {
-  private final List<String> myUsedTokens = new ArrayList<String>();
+  final static Logger LOG = Logger.getInstance(ServerListener.class.getName());
 
-  public TokenData getData(String token) {
-    final String trimmedToken = token.trim();
-    return CollectionsUtil.findFirst(getAllTokenData(), new Filter<TokenData>() {
-      public boolean accept(@NotNull TokenData data) {
-        return data.getToken().equals(trimmedToken);
-      }
-    });
-  }
-
-  private List<TokenData> getAllTokenData() {
-    final ArrayList<TokenData> result = new ArrayList<TokenData>();
-
-    final String rawTokens = TeamCityProperties.getProperty("agent.authorize.tokens");
-    final List<String> rawTokensList = StringUtil.split(rawTokens.trim(), ",");
-    for (String rawToken : rawTokensList) {
-      final List<String> parts = StringUtil.split(rawToken.trim(), ":");
-      final Iterator<String> it = parts.iterator();
-      if (!it.hasNext()) {
-        throw new RuntimeException("Bad token specification"); //todo
-      }
-      final String name = it.next().trim();
-      if (!it.hasNext()) {
-        throw new RuntimeException("Bad token specification"); //todo
-      }
-      final String token = it.next().trim();
-      if (!it.hasNext()) {
-        throw new RuntimeException("Bad token specification"); //todo
-      }
-      final String agentPoolId = it.next().trim();
-
-      final TokenData data = new TokenData(name, token, agentPoolId);
-      result.add(data);
+  public boolean isValid(String token) {
+    final String clientToken = token.trim();
+    final String serverToken = TeamCityProperties.getProperty("teamcity.agentAutoAuthorize.authorizationToken").trim();
+    if (serverToken == null) {
+      LOG.debug("Found no defined server side token - set property 'teamcity.agentAutoAuthorize.authorizationToken' in internal.properties");
+      return false;
     }
-    return result;
-  }
-
-
-  public class TokenData {
-    private final String myName;
-    private final String myToken;
-    private final String myAgentPoolId;
-
-    public TokenData(String name, String token, String agentPoolId) {
-      myName = name;
-      myToken = token;
-      myAgentPoolId = agentPoolId;
-    }
-
-    public String getName() {
-      return myName;
-    }
-
-    public String getToken() {
-      return myToken;
-    }
-
-    public String getAgentPoolId() {
-      return myAgentPoolId;
-    }
+    return serverToken.equals(clientToken);
   }
 }

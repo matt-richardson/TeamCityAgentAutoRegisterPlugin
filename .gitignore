@@ -1,2 +1,5 @@
 dist/
 out/
+.DS_Store
+
+agentAutoAuthorize.iws

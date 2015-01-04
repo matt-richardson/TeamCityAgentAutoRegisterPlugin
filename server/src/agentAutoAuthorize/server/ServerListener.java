@@ -3,14 +3,9 @@ package agentAutoAuthorize.server;
 import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.log.Loggers;
 import jetbrains.buildServer.serverSide.*;
-import jetbrains.buildServer.serverSide.agentPools.AgentPool;
 import jetbrains.buildServer.serverSide.agentPools.AgentPoolManager;
-import jetbrains.buildServer.serverSide.agentPools.NoSuchAgentPoolException;
 import jetbrains.buildServer.util.EventDispatcher;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.Map;
 
 
 public class ServerListener extends BuildServerAdapter {
@@ -56,26 +51,11 @@ public class ServerListener extends BuildServerAdapter {
       return;
     }
 
-    final TokenStore.TokenData data = myTokenStore.getData(authToken);
-    if (data == null) {
-      LOG.debug("Found no defined token data for token \"" + authToken + "\" for agent " + agent.describe(false));
-      return;
+    final boolean isValid = myTokenStore.isValid(authToken);
+    if (isValid) {
+      agent.setAuthorized(true, null, "Authorized by agent token authorize plugin");
+      setAgentParameter(agent, AUTHORIZATION_TOKEN_NAME, authToken);
     }
-    final String agentPoolId = data.getAgentPoolId();
-    if (agentPoolId != null){
-      final Integer parsedPoolId = Integer.valueOf(agentPoolId); //todo handle exceptions
-      final AgentPool agentPool = myAgentPoolManager.findAgentPoolById(parsedPoolId);
-      if (agentPool != null){
-        try {
-          myAgentPoolManager.moveAgentTypesToPool(parsedPoolId, Collections.singleton(agent.getAgentTypeId()));
-        } catch (NoSuchAgentPoolException e) {
-          LOG.error("Error assigning an agent to pool " + e.toString()); //todo
-        }
-      }
-    }
-    agent.setAuthorized(true, null, "Authorized by agent token authorize plugin, token \"" + data.getName() + "\"");
-    setAgentPrameter(agent, AUTHORIZATION_TOKEN_NAME, getSubstitutionValue(data));
-
     // handle "cannot be authorized because there is not enough licenses."
     //filter from agent...
     //filter from build: jetbrains.buildServer.parameters.PasswordParametersFilterCore#VALUES_LIST_CONFIG_PARAMETER_NAME
@@ -83,12 +63,8 @@ public class ServerListener extends BuildServerAdapter {
     // do not authorize on manual unauthorize with comment
   }
 
-  private void setAgentPrameter(SBuildAgent agent, String parameterName, String newParameterValue) {
+  private void setAgentParameter(SBuildAgent agent, String parameterName, String newParameterValue) {
     agent.getConfigurationParameters().put(parameterName, newParameterValue); //todo here exception is thrown at this time
-  }
-
-  private String getSubstitutionValue(TokenStore.TokenData data) {
-    return "processed token \"" + data.getName() + "\"";
   }
 
   private String getTokenForAgent(SBuildAgent agent) {
