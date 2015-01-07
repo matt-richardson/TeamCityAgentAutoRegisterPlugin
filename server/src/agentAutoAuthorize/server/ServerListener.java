@@ -75,17 +75,9 @@ public class ServerListener extends BuildServerAdapter {
     final boolean isValid = myTokenStore.isValid(authToken);
     if (isValid) {
       agent.setAuthorized(true, null, "Authorized by agent token authorize plugin");
-      setAgentParameter(agent, AUTHORIZATION_TOKEN_NAME, authToken);
     }
     // handle "cannot be authorized because there is not enough licenses."
-    //filter from agent...
-    //filter from build: jetbrains.buildServer.parameters.PasswordParametersFilterCore#VALUES_LIST_CONFIG_PARAMETER_NAME
-
     // do not authorize on manual unauthorize with comment
-  }
-
-  private void setAgentParameter(SBuildAgent agent, String parameterName, String newParameterValue) {
-    agent.getConfigurationParameters().put(parameterName, newParameterValue); //todo here exception is thrown at this time
   }
 
   private String getTokenForAgent(SBuildAgent agent) {
