@@ -28,6 +28,10 @@
 
   <target name="dist" depends="check.teamcitydistribution,build.modules,package"/>
 
+  <target name="test" depends="dist">
+    <!-- should probably run some tests here -->
+  </target>
+
   <target name="clean" depends="agentautoauthorize.clean"/>
 
   <target name="deploy" depends="dist">
