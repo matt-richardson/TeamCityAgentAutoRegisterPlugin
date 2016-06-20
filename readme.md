@@ -14,7 +14,7 @@ teamcity.agentAutoAuthorize.authorizationToken=70d44d1e5007dd6b
 
 2. On unauthorized agent, add "teamcity.agentAutoAuthorize.authorizationToken" configuration parameter into buildAgent.propertes file with the value of the token
 For example:
-teamcity.magic.authorizationToken=70d44d1e5007dd6b
+teamcity.agentAutoAuthorize.authorizationToken=70d44d1e5007dd6b
 
 3. Once connected, the agent is authorized (with a comment noting that it was authorised by this plugin).
 Any number of agents can connect with the same token.
